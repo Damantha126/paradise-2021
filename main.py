@@ -61,6 +61,41 @@ START_BUTTON = InlineKeyboardMarkup(
 )
 CLOSE_BUTTON = InlineKeyboardMarkup(
         [[
-        InlineKeyboardButton('Back',callback_data='closebtn'),
+        InlineKeyboardButton('Back',callback_data='cbclose'),
         ]]
     )
+
+
+@PARADISE_2021.on_callback_query() # callbackQuery()
+async def cb_data(bot, update):  
+    if update.data == "paradise_ginfo":
+        await update.message.edit_text(
+            text=GROUP_INFO_TEXT,
+            reply_markup=CLOSE_BUTTON,
+            disable_web_page_preview=True
+        )
+    elif update.data == "paradise_cinfo":
+        await update.message.edit_text(
+            text=CHANNEL_INFO_TEXT,
+            reply_markup=CLOSE_BUTTON,
+            disable_web_page_preview=True
+        )
+    else:
+        await update.message.edit_text(
+            text=START_TEXT.format(update.from_user.mention),
+            disable_web_page_preview=True,
+            reply_markup=START_BUTTON
+        )
+        
+@PARADISE_2021.on_message(filters.command(["start"]) & filters.private)
+async def start_private(bot, update):
+    text = START_TEXT.format(update.from_user.mention)
+    reply_markup = START_BUTTON
+    await update.reply_text(
+        text=text,
+        disable_web_page_preview=True,
+        reply_markup=reply_markup,
+        quote=True
+    )        
+    
+PARADISE_2021.run()    
